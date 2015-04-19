@@ -1,10 +1,11 @@
 package controllers
 
-import (
-	"github.com/hitv/1yy/services/cache"
-	"github.com/martini-contrib/render"
-)
+import "github.com/gocraft/web"
 
-func Index(cache cache.Cache, r render.Render) (int, string) {
+type Index struct {
+	*Base
+}
+
+func (c *Index) Index(rw web.ResponseWriter, req *web.Request) {
 
 }

@@ -4,16 +4,15 @@ import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
+	"github.com/go-xorm/xorm"
 )
 
 var (
-	DefaultDB   *sql.DB
+	db          *xorm.Engine
 	ErrNotFound = sql.ErrNoRows
 )
 
 func InitDB(dsn string) (err error) {
-	DefaultDB, err = sql.Open("mysql", dsn)
-	gorm.
+	db, err = xorm.NewEngine("mysql", dsn)
 	return
 }

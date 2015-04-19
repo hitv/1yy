@@ -12,6 +12,8 @@ import (
 	"hi.tv/1yy/libs/render"
 )
 
+var DefaultApp *App
+
 type App struct {
 	Environment Env
 	Logger      *log.Logger
@@ -59,14 +61,17 @@ func (a *App) Cache() caches.Cache {
 	return a.cache
 }
 
-func NewApp(conf *AppConfig) (app *App, err error) {
+func NewApp(conf *AppConfig) *App {
 	prepareConfig(conf)
-	app = &App{
+	return &App{
 		Environment: conf.Environment,
 		Logger:      conf.Logger,
 		Config:      conf,
 		Render:      render.NewRender(conf.RenderOpt),
 	}
+}
 
+func InitDefaultApp(conf *AppConfig) {
+	DefaultApp = NewApp(conf)
 	return
 }

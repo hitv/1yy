@@ -1,6 +1,0 @@
-[submodule "go-martini/martini"]
-	path = libs/go-martini/martini
-	url = git@github.com:go-martini/martini.git
-[submodule "go-sql-driver/mysql"]
-	path = libs/go-sql-driver/mysql
-	url = https://github.com/go-sql-driver/mysql.git

@@ -2,10 +2,16 @@ package main
 
 import (
 	"github.com/gocraft/web"
-	"github.com/robfig/config"
-	"hi.tv/web/app/controllers"
+	. "hi.tv/1yy/web/app/controllers"
 )
 
-func InitRoute(conf *config.Config) *web.Router {
-	root := web.New(controllers.Base{})
+func InitRoute(assetPath string) *web.Router {
+	root := web.New(Base{}).
+		Middleware(web.StaticMiddleware(assetPath)).
+		Middleware(web.LoggerMiddleware)
+
+	root.Subrouter(Index{}, "").
+		Get("/", (*Index).Index)
+
+	return root
 }
