@@ -18,8 +18,8 @@ func main() {
 	env.InitDefaultApp(conf)
 
 	router := InitRoute(conf.AssetPath)
-	log.Printf("Start listen to %s\n", conf.Addr)
 
+	log.Printf("Start listen to %s\n", conf.Addr)
 	err := http.ListenAndServe(conf.Addr, router)
 	if err != nil {
 		log.Printf("Start server error: %s\n", err)

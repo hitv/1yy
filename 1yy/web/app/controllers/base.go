@@ -8,14 +8,13 @@ import (
 )
 
 type Base struct {
-	*env.App
 	render.Render
+	*env.App
 	Cache caches.Cache
 }
 
 func (c *Base) Init(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
 	c.App = env.DefaultApp
-
 	c.Cache = c.App.Cache()
 	c.Render = c.App.Render(rw, req.Request)
 

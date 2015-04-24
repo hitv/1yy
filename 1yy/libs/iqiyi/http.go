@@ -46,6 +46,7 @@ func (c *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 	}
 
 	header.Set("t", t)
+	header.Set("X-Forwarded-For", "42.196.40.121")
 	header.Set("sign", hex.EncodeToString(h.Sum(nil)))
 	req.Header = header
 

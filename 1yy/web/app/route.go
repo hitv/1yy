@@ -8,7 +8,8 @@ import (
 func InitRoute(assetPath string) *web.Router {
 	root := web.New(Base{}).
 		Middleware(web.StaticMiddleware(assetPath)).
-		Middleware(web.LoggerMiddleware)
+		Middleware(web.LoggerMiddleware).
+		Middleware((*Base).Init)
 
 	root.Subrouter(Index{}, "").
 		Get("/", (*Index).Index)
