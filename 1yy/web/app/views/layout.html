@@ -1,0 +1,24 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta http-equiv="content-type"  content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    <title>{{.title}} - 1影院 手机版</title>
+	<meta name="keywords" content="1影院,在线影院,免费电影" />
+	<meta name="description" content="1影院提供电影电视剧等视频在线免费观看服务，每日更新最新视频，与爱奇艺、搜狐等网站同步更新。" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="full-screen" content="yes">
+    <meta name="layoutmode" content="standard" />
+    <link rel="stylesheet" href="{{asset "css/main.min.css"}}"/>
+    <script type="text/javascript" src="{{asset "js/zepto.min.js"}}"></script>
+    <script type="text/javascript" src="{{asset "js/iscroll.min.js"}}"></script>
+    <script type="text/javascript" src="{{asset "js/main.min.js"}}"></script>
+  </head>
+  <body>
+	{{yield}}
+  <div class="overlay hide"></div>
+  </body>
+</html>
