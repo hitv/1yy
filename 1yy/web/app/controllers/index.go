@@ -9,3 +9,7 @@ type Index struct {
 func (c *Index) Index(rw web.ResponseWriter, req *web.Request) {
 	c.HTML(200, "index", nil)
 }
+
+func (c *Index) Test(rw web.ResponseWriter, req *web.Request) {
+	c.HTML(200, "test", nil)
+}

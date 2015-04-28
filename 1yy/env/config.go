@@ -15,6 +15,14 @@ const (
 	EnvProd Env = "production"
 )
 
+func (e Env) IsDev() bool {
+	return e == EnvDev
+}
+
+func (e Env) IsProd() bool {
+	return e == EnvProd
+}
+
 type AppConfig struct {
 	Environment         Env
 	Addr                string
@@ -41,6 +49,8 @@ func NewAppConfig(confPath string) *AppConfig {
 	if err != nil {
 		panic(err)
 	}
+
+	env := Env(environment)
 
 	addr, err := conf.String("http", "addr")
 	if err != nil {
@@ -92,8 +102,13 @@ func NewAppConfig(confPath string) *AppConfig {
 		assetPrefix = "/"
 	}
 
+	compressHTML := false
+	if env.IsProd() {
+		compressHTML = true
+	}
+
 	return &AppConfig{
-		Environment:         Env(environment),
+		Environment:         env,
 		Addr:                addr,
 		Dsn:                 dsn,
 		AssetPath:           assetPath,
@@ -106,7 +121,8 @@ func NewAppConfig(confPath string) *AppConfig {
 		SessionKeyPairs:     []byte(sessionKeyPairs),
 		Logger:              log.New(os.Stdout, "", log.LstdFlags),
 		RenderOpt: render.Options{
-			Layout: "layout",
+			Layout:       "layout",
+			CompressHTML: compressHTML,
 		},
 	}
 }

@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/oxtoacart/bpool"
@@ -27,8 +28,28 @@ const (
 	defaultCharset = "UTF-8"
 )
 
+type Replacer struct {
+	Reg     *regexp.Regexp
+	Replace []byte
+}
+
 // Provides a temporary buffer to execute templates into and catch errors.
-var bufpool *bpool.BufferPool
+var (
+	bufpool   *bpool.BufferPool
+	replacers = []Replacer{
+		Replacer{
+			Reg:     regexp.MustCompile(`\n|\r`),
+			Replace: []byte(""),
+		},
+		Replacer{
+			Reg:     regexp.MustCompile(`>\s*<`),
+			Replace: []byte("><"),
+		}, Replacer{
+			Reg:     regexp.MustCompile(`\s*<`),
+			Replace: []byte("<"),
+		},
+	}
+)
 
 // Included helper functions for use when rendering html
 var helperFuncs = template.FuncMap{
@@ -87,6 +108,8 @@ type Options struct {
 	Delims Delims
 	// Appends the given charset to the Content-Type header. Default is "UTF-8".
 	Charset string
+	// Outputs compress html
+	CompressHTML bool
 	// Outputs human readable JSON
 	IndentJSON bool
 	// Outputs human readable XML
@@ -254,6 +277,14 @@ func (r *renderer) HTML(status int, name string, binding interface{}, htmlOpt ..
 	if err != nil {
 		http.Error(r, err.Error(), http.StatusInternalServerError)
 		return
+	}
+
+	if r.opt.CompressHTML {
+		data := buf.Bytes()
+		for _, replacer := range replacers {
+			data = replacer.Reg.ReplaceAll(data, replacer.Replace)
+		}
+		buf = bytes.NewBuffer(data)
 	}
 
 	// template rendered fine, write out the result

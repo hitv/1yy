@@ -12,7 +12,8 @@ func InitRoute(assetPath string) *web.Router {
 		Middleware((*Base).Init)
 
 	root.Subrouter(Index{}, "").
-		Get("/", (*Index).Index)
+		Get("/", (*Index).Index).
+		Get("/test", (*Index).Test)
 
 	return root
 }
