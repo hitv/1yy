@@ -11,9 +11,12 @@ func InitRoute(assetPath string) *web.Router {
 		Middleware(web.LoggerMiddleware).
 		Middleware((*Base).Init)
 
-	root.Subrouter(Index{}, "").
+	root.SubRouter(Index{}).
 		Get("/", (*Index).Index).
 		Get("/test", (*Index).Test)
+
+	root.SubRouter(Video{}).
+		Get("/:vid:v_(.+)", (*Video).List)
 
 	return root
 }

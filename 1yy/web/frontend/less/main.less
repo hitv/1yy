@@ -1,0 +1,202 @@
+* {
+    margin: 0;
+    padding: 0
+}
+body{
+    background: #ECEBEB;
+}
+textarea, input, a {
+-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+a {
+    color: #333;
+    text-decoration: none
+}
+ul, ol {
+    list-style: none;
+}
+
+.fix:after {
+    display: block;
+    content: '\20';
+    height: 0;
+    clear: both
+}
+
+.hide{
+    display: none;
+}
+
+.box{
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+}
+.border-box{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.flex-1{
+    -webkit-box-flex: 1;
+    box-flex: 1;
+    -ms-box-flex: 1;
+    -ms-flex: 1;
+}
+.overlay{
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+@header-height: 46px;
+
+header {
+    height: @header-height;
+    line-height: @header-height;
+    background: #FFF url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFW…JyIj8+CcAc6QAAABdJREFUeNpi/P//PwMIMF6/fh3MAggwAEabBoRI+ZDXAAAAAElFTkSuQmCC) repeat-x 0 bottom;
+    background-size: auto 1px;
+    padding: 0 10px;
+    text-align: center;
+    color: #333;
+    position: relative;
+    font-size: 14px;
+    .box;
+    z-index: 300;
+
+    a.active {
+        color: #FF8C50;
+    }
+   .icon {
+        width: 25px;
+        height: 100%;
+        display: block;
+    }
+    .me{
+        background: url(../img/personal_icon_normal.png) no-repeat center;
+        background-size: auto 24px;
+    }
+    .channel{
+        height: @header-height;
+    }
+    .search{
+        background: url(../img/search_icon_normal.png) no-repeat center;
+        background-size: auto 24px;
+    }
+}
+.index-head {
+    line-height: @header-height;
+
+    .channel {
+        .flex-1;
+        margin: 0 15px;
+        color: #666;
+        .wrap {
+            .box;
+            a {
+                display: block;
+                .flex-1;
+            }
+        }
+    }
+}
+
+@slider-height: 160px;
+.slider{
+    height: @slider-height;
+    overflow: hidden;
+    margin: 5px;
+
+    .wrap{
+        display:inline-block;
+        white-space:nowrap;
+        height: @slider-height;
+        .item {
+            display: inline-block;
+            height: @slider-height;
+            white-space: nowrap;
+            img {
+                border-radius: 5px;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+.channels {
+    margin: 5px 2px;
+    .line {
+        .box;
+        .item {
+            .flex-1;
+            width: 23%;
+            margin: 4px;
+            border-radius: 5px;
+            display: block;
+            .icon{
+                width: 20px;
+                height: 20px;
+                margin: 4px auto 2px;
+                background: url(../img/quick_entry_all.png) no-repeat center;
+                background-size: auto 20px;
+            }
+            .txt{
+                font-size: 8px;
+                text-align: center;
+                margin-bottom: 4px;
+                color: #FFF;
+            }
+        }
+
+        .movie{
+            background: #f25e84;
+        }
+        .tv{
+            background: #b677dd;
+        }
+        .variety{
+            background: #47b9e9;
+        }
+        .anime{
+            background: #728be7;
+        }
+        .game{
+            background: #35c977;
+        }
+        .ticket{
+            background: #e7b82b;
+        }
+        .documentary{
+            background: #f47a49;
+        }
+        .all{
+            background: #ed5656;
+        }
+    }
+}
+.mine {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    background: #FFF;
+    .box;
+    a {
+        line-height: 20px;
+        font-size: 14px;
+        padding-left: 20px;
+        background: url(../img/quick_entry_play_his.png) no-repeat left;
+        background-size: auto 20px;
+        display: block;
+        border-right: 1px solid #DFDFDF;
+        margin-right: 8px;
+        .flex-1;
+    }
+    a:last-child {
+        border: none;
+        margin-right: 0;
+    }
+}

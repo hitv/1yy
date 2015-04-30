@@ -34,6 +34,7 @@ minifierOption =
 IS_PROD = false
 
 COFFEE_SRC = [
+  'coffee/modules/*.coffee'
   'coffee/*.coffee'
 ]
 
@@ -43,16 +44,13 @@ LIBS_SRC = [
 ]
 
 LESS_SRC = [
-  '*.less'
+  'less/*.less'
 ]
 
 
 JS_DEST_SRC_FILE = "js/main.src.js"
 LIBS_DEST_SRC_FILE = 'js/libs.src.js'
 CSS_DEST_SRC_FILE = 'css/main.src.css'
-
-JS_DEST_MIN_FILE = 'main.min.js'
-CSS_DEST_MIN_FILE = 'main.min.css'
 
 FINAL_JS_FILES = [
   LIBS_DEST_SRC_FILE,
@@ -81,7 +79,14 @@ gulp.task 'contact-js', ->
     .pipe concat FINAL_JS_SRC_FILE
     .pipe gulp.dest PUBLIC_PATH
 
-gulp.task 'build', ['build-lib-js', 'build-main-js']
+gulp.task 'build-css', ->
+  gulp.src LESS_SRC, cwd: FRONTEND_PATH
+    .pipe plumber errorHandler: errHandler
+    .pipe less lessOption
+    .pipe concat CSS_DEST_SRC_FILE, newLine: '\n'
+    .pipe gulp.dest PUBLIC_PATH
+
+gulp.task 'build', ['build-lib-js', 'build-main-js', 'build-css']
 
 gulp.task 'all', ->
   runSequence 'build', 'contact-js'

@@ -17,6 +17,5 @@ func (c *Base) Init(rw web.ResponseWriter, req *web.Request, next web.NextMiddle
 	c.App = env.DefaultApp
 	c.Cache = c.App.Cache()
 	c.Render = c.App.Render(rw, req.Request)
-
 	next(rw, req)
 }
