@@ -147,45 +147,78 @@ header .search {
   -ms-flex: 1;
   width: 23%;
   margin: 4px;
+  padding: 2px 0;
   border-radius: 5px;
   display: block;
 }
-.channels .line .item .icon {
-  width: 20px;
-  height: 20px;
-  margin: 4px auto 2px;
+.channels .line .icon {
+  width: 24px;
+  height: 24px;
+  margin: 6px auto 2px;
   background: url(../img/quick_entry_all.png) no-repeat center;
-  background-size: auto 20px;
+  background-size: auto 24px;
 }
-.channels .line .item .txt {
-  font-size: 8px;
+.channels .line .txt {
+  font-size: 12px;
   text-align: center;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: #FFF;
 }
 .channels .line .movie {
   background: #f25e84;
 }
+.channels .line .movie .icon {
+  background: url(../img/quick_entry_film.png) no-repeat center;
+  background-size: auto 24px;
+}
 .channels .line .tv {
   background: #b677dd;
+}
+.channels .line .tv .icon {
+  background: url(../img/quick_entry_tv_series.png) no-repeat center;
+  background-size: auto 24px;
 }
 .channels .line .variety {
   background: #47b9e9;
 }
+.channels .line .variety .icon {
+  background: url(../img/quick_entry_variety.png) no-repeat center;
+  background-size: auto 24px;
+}
 .channels .line .anime {
   background: #728be7;
+}
+.channels .line .anime .icon {
+  background: url(../img/quick_entry_anime.png) no-repeat center;
+  background-size: auto 24px;
 }
 .channels .line .game {
   background: #35c977;
 }
+.channels .line .game .icon {
+  background: url(../img/quick_entry_all.png) no-repeat center;
+  background-size: auto 24px;
+}
 .channels .line .ticket {
   background: #e7b82b;
+}
+.channels .line .ticket .icon {
+  background: url(../img/quick_entry_all.png) no-repeat center;
+  background-size: auto 24px;
 }
 .channels .line .documentary {
   background: #f47a49;
 }
+.channels .line .documentary .icon {
+  background: url(../img/quick_entry_all.png) no-repeat center;
+  background-size: auto 24px;
+}
 .channels .line .all {
   background: #ed5656;
+}
+.channels .line .all .icon {
+  background: url(../img/quick_entry_all.png) no-repeat center;
+  background-size: auto 24px;
 }
 .mine {
   margin: 5px;
@@ -205,11 +238,23 @@ header .search {
   background-size: auto 20px;
   display: block;
   border-right: 1px solid #DFDFDF;
-  margin-right: 8px;
+  margin-right: 20px;
   -webkit-box-flex: 1;
   box-flex: 1;
   -ms-box-flex: 1;
   -ms-flex: 1;
+}
+.mine a.history {
+  background: url(../img/quick_entry_play_his.png) no-repeat left;
+  background-size: auto 20px;
+}
+.mine a.offline {
+  background: url(../img/quick_entry_offline.png) no-repeat left;
+  background-size: auto 20px;
+}
+.mine a.favorite {
+  background: url(../img/quick_entry_tv.png) no-repeat left;
+  background-size: auto 20px;
 }
 .mine a:last-child {
   border: none;
