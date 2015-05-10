@@ -2,7 +2,6 @@
 	$.InitNav = ->
 		overlay = $ '#overlay'
 		nav = $('nav.list-nav').NavPlugin('.cat>.item', '.selector')
-
 		overlay.on 'click', (e) ->
 			nav.reset()
 			return

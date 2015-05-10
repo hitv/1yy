@@ -1,11 +1,11 @@
-<header class="index-head">
+<header class="index">
   <a class="icon me" href="/home"></a>
-  <div class="channel">
-    <div class="wrap">
+  <div class="wrap">
+    <nav>
       <a href="/hot" class="active">热点</a>
       <a href="/best">爆点</a>
       <a href="/top">排行</a>
-    </div>
+    </nav>
   </div>
   <a class="icon search" href="/search"></a>
 </header>
@@ -17,60 +17,90 @@
     <div class="item"><img alt="14" src="img/4.jpg"/></div>
   </div>
   <div class="points">
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
 </section>
-<section class="channels">
+<nav class="channels">
   <div class="line">
-    <a class="item movie" href="#">
+    <a class="item movie" href="/channel-dianying">
       <div class="icon"></div>
       <div class="txt">电影</div>
     </a>
-    <a class="item tv" href="#">
+    <a class="item tv" href="/channel-dianshiju">
       <div class="icon"></div>
       <div class="txt">电视剧</div>
     </a>
-    <a class="item variety" href="#">
+    <a class="item variety" href="/channel-zongyi">
       <div class="icon"></div>
       <div class="txt">综艺</div>
     </a>
-    <a class="item anime" href="#">
+    <a class="item anime" href="/channel-dongman">
       <div class="icon"></div>
       <div class="txt">动漫</div>
     </a>
   </div>
   <div class="line">
-    <a class="item game" href="#">
+    <a class="item game" href="/channel-xinwen">
       <div class="icon"></div>
-      <div class="txt">游戏</div>
+      <div class="txt">新闻</div>
     </a>
-    <a class="item ticket" href="#">
+    <a class="item ticket" href="/channel-yule">
       <div class="icon"></div>
-      <div class="txt">电影票</div>
+      <div class="txt">娱乐</div>
     </a>
-    <a class="item documentary" href="#">
+    <a class="item documentary" href="/channel-jilupian">
       <div class="icon"></div>
       <div class="txt">纪录片</div>
     </a>
-    <a class="item all" href="#">
+    <a class="item all" href="/channels">
       <div class="icon"></div>
       <div class="txt">全部</div>
     </a>
   </div>
-</section>
+</nav>
 <section class="mine">
-  <a class="history" href="#">播放历史</a>
-  <a class="offline" href="#">我的离线</a>
-  <a class="favorite" href="#">我的收藏</a>
+  <a class="history" href="/my-history">播放历史</a>
+  <a class="favorite" href="/my-favorite">我的收藏</a>
 </section>
+{{range .channels}}
+<section class="channel">
+  <nav>
+    {{range $i, $channel := .data}}
+    <a href="#"{{if eq $i 0}} class="active"{{end}}>{{.title}}</a>
+    {{end}}
+  </nav>
+  <div class="items">
+    {{range $i, $channel := .data}}
+    <div class="item fix{{if eq $i 0}} active{{end}}">
+      {{range .videos}}
+      <a href="#">
+        <div class="thumb">
+          <img src="{{.thumb}}"/>
+          <span class="info">{{.info}}</span>
+        </div>
+        <div class="title">{{.title}}</div>
+      </a>
+      {{end}}
+    </div>
+    {{end}}
+  </div>
+  <a href="#" class="more">{{.more}}&nbsp;{{.total}}</a>
+</section>
+{{end}}
 <script type="text/javascript">
   var slider = $('#slider').Slider();
+
   slider.on('click', function(e, item){
     console.log(item);
+  });
+
+  $('.channel').each(function(i, tab){
+    $(tab).Tab({
+      navSelector: 'nav',
+      contentSelector: '.items',
+    });
   });
 </script>

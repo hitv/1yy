@@ -11,7 +11,7 @@
 		opt.autoPlay = if typeof opt.autoPlay isnt 'undefined' then opt.autoPlay else true
 		wrapper = that.find opt.wrapSelector or '.wrap'
 		items = wrapper.find opt.itemSelector or '.item'
-		points = that.find opt.pointsSelector or '.points>ul>li'
+		points = that.find opt.pointsSelector or '.points>span'
 		itemWidth = that.width()
 
 		itemNum = items.length

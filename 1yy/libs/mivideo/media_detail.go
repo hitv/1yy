@@ -1,11 +1,6 @@
-package fetch
+package mivideo
 
-import (
-	"github.com/hitv/1yy/app/models"
-	"github.com/hitv/1yy/app/models/enums"
-	"github.com/hitv/1yy/app/utils"
-)
-
+/*
 type MediaInfo struct {
 	Actors        string `json:"actors"`
 	Categorys     string `json:"allcategorys"`
@@ -144,3 +139,4 @@ func FetchMediaFilter(channelId uint32, pageSize, page int) (data *MediaFilter, 
 
 	return
 }
+*/

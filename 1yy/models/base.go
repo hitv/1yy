@@ -1,15 +1,13 @@
 package models
 
 import (
-	"database/sql"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 )
 
 var (
 	db          *xorm.Engine
-	ErrNotFound = sql.ErrNoRows
+	ErrNotExist = xorm.ErrNotExist
 )
 
 func InitDB(dsn string) (err error) {

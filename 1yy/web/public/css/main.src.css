@@ -3,7 +3,7 @@
   padding: 0;
 }
 body {
-  background: #ECEBEB;
+  background: #ecebeb;
 }
 textarea,
 input,
@@ -69,7 +69,7 @@ header {
   z-index: 300;
 }
 header a.active {
-  color: #FF8C50;
+  color: #ff8c50;
 }
 header .icon {
   width: 25px;
@@ -80,17 +80,17 @@ header .me {
   background: url(../img/personal_icon_normal.png) no-repeat center;
   background-size: auto 24px;
 }
-header .channel {
+header nav {
   height: 46px;
 }
 header .search {
   background: url(../img/search_icon_normal.png) no-repeat center;
   background-size: auto 24px;
 }
-.index-head {
+header.index {
   line-height: 46px;
 }
-.index-head .channel {
+header.index .wrap {
   -webkit-box-flex: 1;
   box-flex: 1;
   -ms-box-flex: 1;
@@ -98,13 +98,13 @@ header .search {
   margin: 0 15px;
   color: #666;
 }
-.index-head .channel .wrap {
+header.index nav {
   display: box;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
 }
-.index-head .channel .wrap a {
+header.index nav a {
   display: block;
   -webkit-box-flex: 1;
   box-flex: 1;
@@ -114,7 +114,8 @@ header .search {
 .slider {
   height: 160px;
   overflow: hidden;
-  margin: 5px;
+  margin: 5px 8px;
+  position: relative;
 }
 .slider .wrap {
   display: inline-block;
@@ -131,16 +132,36 @@ header .search {
   width: 100%;
   height: 100%;
 }
-.channels {
-  margin: 5px 2px;
+.slider .points {
+  position: absolute;
+  width: 100%;
+  bottom: 8px;
+  text-align: center;
 }
-.channels .line {
+.slider .points span {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  margin: 0 2px;
+  display: inline-block;
+  background: #666;
+  opacity: 0.8;
+  -moz-opacity: 0.8;
+  -webkit-opacity: 0.8;
+}
+.slider .points span.active {
+  background: #FFF;
+}
+nav.channels {
+  margin: 5px 4px;
+}
+nav.channels .line {
   display: box;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
 }
-.channels .line .item {
+nav.channels .line .item {
   -webkit-box-flex: 1;
   box-flex: 1;
   -ms-box-flex: 1;
@@ -151,77 +172,77 @@ header .search {
   border-radius: 5px;
   display: block;
 }
-.channels .line .icon {
+nav.channels .line .icon {
   width: 24px;
   height: 24px;
   margin: 6px auto 2px;
   background: url(../img/quick_entry_all.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .txt {
+nav.channels .line .txt {
   font-size: 12px;
   text-align: center;
   margin-bottom: 6px;
   color: #FFF;
 }
-.channels .line .movie {
+nav.channels .line .movie {
   background: #f25e84;
 }
-.channels .line .movie .icon {
+nav.channels .line .movie .icon {
   background: url(../img/quick_entry_film.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .tv {
+nav.channels .line .tv {
   background: #b677dd;
 }
-.channels .line .tv .icon {
+nav.channels .line .tv .icon {
   background: url(../img/quick_entry_tv_series.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .variety {
+nav.channels .line .variety {
   background: #47b9e9;
 }
-.channels .line .variety .icon {
+nav.channels .line .variety .icon {
   background: url(../img/quick_entry_variety.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .anime {
+nav.channels .line .anime {
   background: #728be7;
 }
-.channels .line .anime .icon {
+nav.channels .line .anime .icon {
   background: url(../img/quick_entry_anime.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .game {
+nav.channels .line .game {
   background: #35c977;
 }
-.channels .line .game .icon {
+nav.channels .line .game .icon {
   background: url(../img/quick_entry_all.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .ticket {
+nav.channels .line .ticket {
   background: #e7b82b;
 }
-.channels .line .ticket .icon {
+nav.channels .line .ticket .icon {
   background: url(../img/quick_entry_all.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .documentary {
+nav.channels .line .documentary {
   background: #f47a49;
 }
-.channels .line .documentary .icon {
+nav.channels .line .documentary .icon {
   background: url(../img/quick_entry_all.png) no-repeat center;
   background-size: auto 24px;
 }
-.channels .line .all {
+nav.channels .line .all {
   background: #ed5656;
 }
-.channels .line .all .icon {
+nav.channels .line .all .icon {
   background: url(../img/quick_entry_all.png) no-repeat center;
   background-size: auto 24px;
 }
 .mine {
-  margin: 5px;
+  margin: 8px;
   padding: 10px;
   border-radius: 5px;
   background: #FFF;
@@ -259,4 +280,92 @@ header .search {
 .mine a:last-child {
   border: none;
   margin-right: 0;
+}
+.channel {
+  margin: 8px;
+  border: 1px solid #DDD;
+  border-radius: 5px;
+  background: #FFF;
+}
+.channel nav {
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  background: #ecebeb;
+}
+.channel nav a {
+  -webkit-box-flex: 1;
+  box-flex: 1;
+  -ms-box-flex: 1;
+  -ms-flex: 1;
+  height: 40px;
+  line-height: 40px;
+  display: block;
+  text-align: center;
+  border: 1px solid #DDD;
+  border-width: 0 1px 1px 0;
+}
+.channel nav a.active {
+  height: 39px;
+  background: #FFF;
+  border-top: 2px solid #ff8c50;
+  color: #ff8c50;
+  border-bottom-width: 0;
+}
+.channel nav a.active:first-child {
+  border-top-left-radius: 5px;
+}
+.channel nav a:last-child {
+  border-right-width: 0;
+}
+.channel nav a.active:last-child {
+  border-top-right-radius: 5px;
+}
+.channel .items {
+  background: #FFF;
+}
+.channel .items .item {
+  display: none;
+  padding: 6px;
+}
+.channel .items .item a {
+  width: 50%;
+  float: left;
+  display: block;
+}
+.channel .items .item a .thumb {
+  margin: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.channel .items .item a .thumb img {
+  width: 100%;
+  height: 100px;
+}
+.channel .items .item a .thumb .info {
+  position: absolute;
+  left: 8px;
+  bottom: 4px;
+  font-size: 14px;
+  color: #FFF;
+}
+.channel .items .item a .title {
+  height: 2.4em;
+  margin: 6px;
+  line-height: 1.2em;
+  font-size: 13px;
+  overflow: hidden;
+}
+.channel .items .item.active {
+  display: block;
+}
+.channel .more {
+  display: block;
+  margin: 0 12px 12px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid #CCC;
 }

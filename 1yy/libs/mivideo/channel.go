@@ -1,24 +1,8 @@
 // channel_info.go
-package fetch
+package mivideo
 
-import (
-	"fmt"
-
-	"github.com/hitv/1yy/app/models"
-	"github.com/hitv/1yy/app/models/enums"
-)
-
-type Channel struct {
-	Id        uint32    `json:"id"`
-	Name      string    `json:"name"`
-	Count     uint32    `json:"count"`
-	Type      int32     `json:"type"`
-	RecSub    []Channel `json:"recsub"`
-	Sub       []Channel `json:"sub"`
-	SubFilter []Channel `json:"subfilter"`
-}
-
-func (c *Channel) Save(parentId uint32, channelType enums.ChannelType) (id uint32, err error) {
+/*
+func (c *Channel) Save(parentId int64, channelType enums.ChannelType) (id int64, err error) {
 	channel, err := models.ChannelDao.GetByMiId(c.Id)
 	if err != nil {
 		if err != models.ErrNotFound {
@@ -62,19 +46,6 @@ func (c *Channel) Save(parentId uint32, channelType enums.ChannelType) (id uint3
 	return
 }
 
-type ChannelInfo struct {
-	Status int       `json:"status"`
-	Data   []Channel `json:"data"`
-}
-
-func FetchChannelInfo(channelId int) (info *ChannelInfo, err error) {
-	info = &ChannelInfo{}
-	u := NewRequestURL(MI_HOST, "/tvservice/getchannelinfo3")
-	u.AddParam("channelid", channelId)
-	AddCommonParam(u)
-	err = DoPost(u, info)
-	return
-}
 
 func (c *ChannelInfo) Save() (err error) {
 	if c.Status != 0 {
@@ -91,3 +62,4 @@ func (c *ChannelInfo) Save() (err error) {
 
 	return
 }
+*/

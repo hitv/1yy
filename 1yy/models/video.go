@@ -3,7 +3,7 @@ package models
 var VideoDao = &videoDao{}
 
 type VideoModel struct {
-	Id                uint32
+	Id                int64
 	Title             string
 	Actors            string
 	Director          string
@@ -12,60 +12,54 @@ type VideoModel struct {
 	Area              string
 	Description       string
 	ShortDescription  string
-	Flag              int32
-	IsMultSet         int32
-	IssueDate         int32
+	Flag              int64
+	IsMultSet         int64
+	IssueDate         int64
 	Language          string
 	LastIssueDate     string
 	Md5               string
 	DownloadSrc       string
-	MidType           int32
+	MidType           int64
 	IndexCapital      string
 	IndexFuzzyCapital string
 	IndexSpelling     string
 	IndexSymbol       string
-	IndexValidLength  uint32
-	PlayCount         uint32
-	PlayLength        float32
+	IndexValidLength  int64
+	PlayCount         int64
+	PlayLength        float64
 	PosterURL         string
-	Resolution        int32
+	Resolution        int64
 	Score             float64
-	ScoreCount        uint32
-	SetCount          float32
-	SetNow            int32
+	ScoreCount        int64
+	SetCount          float64
+	SetNow            int64
 	SmallPosterMd5    string
 	SmallPosterURL    string
 	WebpPosterMd5     string
 	WebpPosterURL     string
 	Status            string
-	MiId              uint32
+	MiId              int64
+}
+
+func (m *VideoModel) TableName() string {
+	return "video"
 }
 
 type videoDao struct{}
 
-func (c *videoDao) GetByMid(miId uint32) (data *VideoModel, err error) {
-	data = &VideoModel{}
-	/*
-		row := db.QueryRow("SELECT `id`,`title`,`actors`,`director`,`categorys`,`category`,`area`,`desc`,`short_desc`,`flag`,`is_multset`,`issue_date`,`language`,`last_issue_date`,`md5`,`download_src`,`mid_type`,`index_capital`,`index_fuzzycapital`,`index_spelling`,`index_symbol`,`index_validlength`,`play_count`,`play_length`,`poster_url`,`resolution`,`score`,`score_count`,`set_count`,`set_now`,`small_poster_md5`,`small_poster_url`,`webp_poster_md5`,`webp_poster_url`,`status`,`mi_id` FROM video WHERE mi_id=?", miId)
-		err = row.Scan(&data.Id, &data.Title, &data.Actors, &data.Director, &data.Categorys, &data.Category, &data.Area, &data.Description, &data.ShortDescription, &data.Flag, &data.IsMultSet, &data.IssueDate, &data.Language, &data.LastIssueDate, &data.Md5, &data.DownloadSrc, &data.MidType, &data.IndexCapital, &data.IndexFuzzyCapital, &data.IndexSpelling, &data.IndexSymbol, &data.IndexValidLength, &data.PlayCount, &data.PlayLength, &data.PosterURL, &data.Resolution, &data.Score, &data.ScoreCount, &data.SetCount, &data.SetNow, &data.SmallPosterMd5, &data.SmallPosterURL, &data.WebpPosterMd5, &data.WebpPosterURL, &data.Status, &data.MiId)*/
+func (c *videoDao) GetByMid(miId int64) (video *VideoModel, err error) {
+	video = &VideoModel{}
+	has, err := db.Where("mi_id=?", miId).Get(video)
+	if err == nil && !has {
+		err = ErrNotExist
+	}
 	return
 }
 
-func (c *videoDao) Insert(data *VideoModel) (id uint32, err error) {
-	/*rs, err := DefaultDB.Exec("INSERT INTO video(`title`,`actors`,`director`,`categorys`,`category`,`area`,`desc`,`short_desc`,`flag`,`is_multset`,`issue_date`,`language`,`last_issue_date`,`md5`,`download_src`,`mid_type`,`index_capital`,`index_fuzzycapital`,`index_spelling`,`index_symbol`,`index_validlength`,`play_count`,`play_length`,`poster_url`,`resolution`,`score`,`score_count`,`set_count`,`set_now`,`small_poster_md5`,`small_poster_url`,`webp_poster_md5`,`webp_poster_url`,`status`,`mi_id`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", data.Title, data.Actors, data.Director, data.Categorys, data.Category, data.Area, data.Description, data.ShortDescription, data.Flag, data.IsMultSet, data.IssueDate, data.Language, data.LastIssueDate, data.Md5, data.DownloadSrc, data.MidType, data.IndexCapital, data.IndexFuzzyCapital, data.IndexSpelling, data.IndexSymbol, data.IndexValidLength, data.PlayCount, data.PlayLength, data.PosterURL, data.Resolution, data.Score, data.ScoreCount, data.SetCount, data.SetNow, data.SmallPosterMd5, data.SmallPosterURL, data.WebpPosterMd5, data.WebpPosterURL, data.Status, data.MiId)
-	if err != nil {
-		return
-	}
-	insertId, err := rs.LastInsertId()
-	if err != nil {
-		return
-	}
-	id = uint32(insertId)*/
-	return
+func (c *videoDao) Insert(video *VideoModel) (int64, error) {
+	return db.Insert(video)
 }
 
-func (c *videoDao) Update(data *VideoModel) (err error) {
-	/*_, err = DefaultDB.Exec("UPDATE video SET `title`=?,`actors`=?,`director`=?,`categorys`=?,`category`=?,`area`=?,`desc`=?,`short_desc`=?,`flag`=?,`is_multset`=?,`issue_date`=?,`language`=?,`last_issue_date`=?,`md5`=?,`download_src`=?,`mid_type`=?,`index_capital`=?,`index_fuzzycapital`=?,`index_spelling`=?,`index_symbol`=?,`index_validlength`=?,`play_count`=?,`play_length`=?,`poster_url`=?,`resolution`=?,`score`=?,`score_count`=?,`set_count`=?,`set_now`=?,`small_poster_md5`=?,`small_poster_url`=?,`webp_poster_md5`=?,`webp_poster_url`=?,`status`=?,`mi_id`=? WHERE id=?", data.Title, data.Actors, data.Director, data.Categorys, data.Category, data.Area, data.Description, data.ShortDescription, data.Flag, data.IsMultSet, data.IssueDate, data.Language, data.LastIssueDate, data.Md5, data.DownloadSrc, data.MidType, data.IndexCapital, data.IndexFuzzyCapital, data.IndexSpelling, data.IndexSymbol, data.IndexValidLength, data.PlayCount, data.PlayLength, data.PosterURL, data.Resolution, data.Score, data.ScoreCount, data.SetCount, data.SetNow, data.SmallPosterMd5, data.SmallPosterURL, data.WebpPosterMd5, data.WebpPosterURL, data.Status, data.MiId, data.Id)
-	 */
-	return
+func (c *videoDao) Update(video *VideoModel) (int64, error) {
+	return db.Update(video)
 }

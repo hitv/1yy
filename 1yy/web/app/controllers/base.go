@@ -1,21 +1,30 @@
 package controllers
 
 import (
-	"github.com/gocraft/web"
-	"hi.tv/1yy/env"
-	"hi.tv/1yy/libs/caches"
+	"log"
+	"time"
+
+	"github.com/gofly/web"
 	"hi.tv/1yy/libs/render"
+	"hi.tv/1yy/web/env"
 )
 
 type Base struct {
-	render.Render
+	Rw     web.ResponseWriter `inject`
+	Req    *web.Request       `inject`
+	Render render.Render
 	*env.App
-	Cache caches.Cache
 }
 
-func (c *Base) Init(rw web.ResponseWriter, req *web.Request, next web.NextMiddlewareFunc) {
+func (c *Base) Init(next web.NextMiddlewareFunc) {
 	c.App = env.DefaultApp
-	c.Cache = c.App.Cache()
-	c.Render = c.App.Render(rw, req.Request)
-	next(rw, req)
+	c.Render = c.App.Render(c.Rw, c.Req.Request)
+	next(c.Rw, c.Req)
+}
+
+func (c *Base) RequestLog(next web.NextMiddlewareFunc) {
+	startTime := time.Now()
+	next(c.Rw, c.Req)
+	duration := time.Since(startTime)
+	log.Printf("%s %s %d - %s\n", c.Req.Method, c.Req.URL.Path, c.Rw.StatusCode(), duration.String())
 }

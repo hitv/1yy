@@ -104,7 +104,7 @@
     opt.autoPlay = typeof opt.autoPlay !== 'undefined' ? opt.autoPlay : true;
     wrapper = that.find(opt.wrapSelector || '.wrap');
     items = wrapper.find(opt.itemSelector || '.item');
-    points = that.find(opt.pointsSelector || '.points>ul>li');
+    points = that.find(opt.pointsSelector || '.points>span');
     itemWidth = that.width();
     itemNum = items.length;
     timer = 0;
@@ -210,6 +210,40 @@
   };
   $.extend($.fn, {
     Slider: Slider
+  });
+})();
+
+(function() {
+  var Tab;
+  Tab = function(opt) {
+    var contentEl, contentSel, navEl, navSel, select;
+    navSel = opt.navSelector || '.tab-nav';
+    contentSel = opt.contentSelector || '.tab-content';
+    navEl = this.find(navSel);
+    contentEl = this.find(contentSel);
+    select = function(n) {
+      var fn;
+      fn = function() {
+        var children;
+        children = this.children();
+        children.removeClass('active');
+        $(children.get(n)).addClass('active');
+      };
+      fn.call(navEl);
+      fn.call(contentEl);
+    };
+    navEl.children().each(function(i, el) {
+      $(el).on('click', function(e) {
+        select(i);
+        e.preventDefault();
+      });
+    });
+    $.extend(this, {
+      select: select
+    });
+  };
+  return $.extend($.fn, {
+    Tab: Tab
   });
 })();
 
