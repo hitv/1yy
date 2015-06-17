@@ -12,5 +12,9 @@ var (
 
 func InitDB(dsn string) (err error) {
 	db, err = xorm.NewEngine("mysql", dsn)
+	if err != nil {
+		return
+	}
+	err = db.Sync2(&RecGroupModel{}, &RecGroupItemModel{})
 	return
 }

@@ -1,33 +1,55 @@
 (->
 	Slider = (opt) ->
 		that = this
+		touchX = 0
+		moveX = 0
+		offsetX = 0
+		itemNum = 0
+		sliderWidth = 0
+		current = 0
+		points = []
+		timer = false
 		hm = that.html()
+
 		hm = hm.replace /\n|\r/g, ''
 		hm = hm.replace />\s*</g, '><'
 		hm = hm.replace /\s*</g, '<'
 		that.html hm
 
 		opt = opt or {}
-		opt.autoPlay = if typeof opt.autoPlay isnt 'undefined' then opt.autoPlay else true
-		wrapper = that.find opt.wrapSelector or '.wrap'
-		items = wrapper.find opt.itemSelector or '.item'
-		points = that.find opt.pointsSelector or '.points>span'
-		itemWidth = that.width()
-
-		itemNum = items.length
-		timer = 0
-
-		items.width itemWidth
-
-		touchX = 0
-		moveX = 0
-		offsetX = 0
-		current = 0
 		transformDuration = opt.transformDuration or 500
 		autoPlayInterval = opt.autoPlayInterval or 3000
+		opt.autoPlay = if typeof opt.autoPlay isnt 'undefined' then opt.autoPlay else true
+		wrapper = that.find opt.wrapper or '.wrap'
+		items = wrapper.find opt.itemSelector or '.item'
+		pointsWrapper = that.find opt.pointsWrapper or '.points'
+
+		resize = ->
+			sliderWidth = that.width()
+			items.width sliderWidth
+			showSlider current
+			return
+
+		init = ->
+			items.each () ->
+				pointsWrapper.append '<span></span>'
+				return
+
+			itemNum = items.length
+
+			points = pointsWrapper.find 'span'
+
+			that.on 'touchstart', touchStart
+			that.on 'touchmove', touchMove
+			that.on 'touchend', touchEnd
+
+			setTimer() if opt.autoPlay
+			resize()
+			return
 
 		setTimer = ->
-			timer = setInterval showNext, autoPlayInterval
+			timer = setInterval(showNext, autoPlayInterval)
+			return
 
 		setTransformX = (pixel, duration) ->
 			wrapper.css {
@@ -38,8 +60,7 @@
 
 		setPointActive = (i) ->
 			points.removeClass 'active'
-			point = $ points.get current
-			point.addClass 'active'
+			$(points.get(current)).addClass 'active'
 			return
 
 		showSlider = (i) ->
@@ -48,7 +69,7 @@
 			else if i is itemNum
 				i = 0
 			current = i % itemNum
-			offsetX = -itemWidth * current
+			offsetX = -sliderWidth * current
 			setTransformX offsetX, transformDuration
 
 			setPointActive current
@@ -74,7 +95,7 @@
 				touchX = e.pageX
 
 			# 清除定时
-			clearInterval timer
+			clearInterval timer if timer isnt false
 			return
 
 		touchMove = (e) ->
@@ -103,12 +124,7 @@
 
 			return
 
-		that.on 'touchstart', touchStart
-		that.on 'touchmove', touchMove
-		that.on 'touchend', touchEnd
-
-		showSlider 0
-		setTimer() if opt.autoPlay
+		init()
 
 		$.extend that, {
 			prev: showPrev,
@@ -116,10 +132,15 @@
 			show: showSlider,
 			pause: ->
 				opt.autoPlay = false
-				clearInterval timer
+				clearInterval timer if timer isnt false
+				return
+
 			play: ->
 				opt.autoPlay = true
 				setTimer()
+				return
+
+			resize: resize
 		}
 		return that
 

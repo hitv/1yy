@@ -2,8 +2,8 @@ package enums
 
 const (
 	StatusEnabled  Status = "ENABLED"
-	StatusDisabled        = "DISABLED"
-	StatusDeleted         = "DELETED"
+	StatusDisabled Status = "DISABLED"
+	StatusDeleted  Status = "DELETED"
 )
 
 type Status string

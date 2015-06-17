@@ -5,13 +5,11 @@ import (
 	"net/http"
 
 	"github.com/bitly/go-simplejson"
-	"hi.tv/1yy/libs/mivideo/errors"
-	"hi.tv/1yy/libs/mivideo/types"
 )
 
 type MiVideoService interface {
 	NewRequest(path string) *Request
-	FetchHomeData() (*types.HomeData, error)
+	FetchHomeData() (*HomeData, error)
 	/*
 		FetchChannelInfo(channelId int64) (*ChannelInfo, error)
 		FetchMediaDetail(mediaId int64) (*MediaDetail, error)
@@ -52,7 +50,7 @@ func (s *miVideoService) NewRequest(path string) *Request {
 	}
 }
 
-func (s *miVideoService) FetchHomeData() (data *types.HomeData, err error) {
+func (s *miVideoService) FetchHomeData() (data *HomeData, err error) {
 	req := s.NewRequest("c/home")
 	req.AddCommonParam()
 	err = req.Get(func(r io.Reader) (err error) {
@@ -61,10 +59,9 @@ func (s *miVideoService) FetchHomeData() (data *types.HomeData, err error) {
 			return
 		}
 
-		data, err = types.ParseHomeData(json)
+		data, err = ParseHomeData(json)
 		if err != nil {
-			return
-			err = errors.ParseError(json)
+			err = ParseError(json)
 		}
 		return
 	})

@@ -12,6 +12,7 @@ func InitRoute(assetPath string) *web.Router {
 		Middleware((*Base).RequestLog)
 
 	root.SubRouter(Index{}).
+		Middleware((*Index).Init).
 		Get("/", (*Index).Index).
 		Get("/best", (*Index).Best).
 		Get("/rank", (*Index).Rank)

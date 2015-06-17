@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	cache "github.com/pmylund/go-cache"
 )
 
 var (
@@ -43,7 +45,8 @@ func determinePlatformByIqiyi(ua string) (platform string, err error) {
 	} else {
 		req.Header.Add("User-Agent", ua)
 		httpClient.CheckRedirect = checkRedirectFunc
-		_, err = httpClient.Do(req)
+		var resp *http.Response
+		resp, err = httpClient.Do(req)
 		if err != nil {
 			if strings.Index(err.Error(), "PHONE") > 0 {
 				platform = "PHONE"
@@ -51,6 +54,7 @@ func determinePlatformByIqiyi(ua string) (platform string, err error) {
 				fmt.Printf("发起HEAD请求www.iqiyi.com出错: %s", err.Error())
 			}
 		}
+		defer resp.Body.Close()
 	}
 	return
 }

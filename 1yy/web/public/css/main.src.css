@@ -120,11 +120,11 @@ header.index nav a {
 .slider .wrap {
   display: inline-block;
   white-space: nowrap;
-  height: 160px;
+  height: 100%;
 }
 .slider .wrap .item {
   display: inline-block;
-  height: 160px;
+  height: 100%;
   white-space: nowrap;
 }
 .slider .wrap .item img {

@@ -1,146 +1,63 @@
 package controllers
 
+import (
+	"time"
+
+	"hi.tv/1yy/libs/mivideo"
+)
+
 type Index struct {
 	*Base
 }
 
+func (c *Index) getHomeData() (homeData *mivideo.HomeData, err error) {
+	homeData = &mivideo.HomeData{}
+	err = c.Cache.Get("home-data", homeData)
+	if err == nil {
+		return
+	}
+	if err != ErrCacheMiss {
+		return
+	}
+	miVideoService := mivideo.NewMiVideoService(
+		c.App.Config.MiHost,
+		c.App.Config.MiApi,
+		c.App.Config.MiKey,
+		c.App.Config.MiToken,
+	)
+	homeData, err = miVideoService.FetchHomeData()
+	if err != nil {
+		return
+	}
+	err = c.Cache.Set("home-data", homeData, time.Hour)
+	return
+}
 func (c *Index) Index() {
-	c.Render.HTML(200, "index", map[string]interface{}{
-		"channels": []map[string]interface{}{
-			map[string]interface{}{
-				"more":  "更多热门视频",
-				"total": "210741个",
-				"data": []map[string]interface{}{
-					{
-						"title": "新闻",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					}, {
-						"title": "娱乐",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					}, {
-						"title": "体育",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					}, {
-						"title": "音乐",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					},
-				},
-			},
-			map[string]interface{}{
-				"more":  "进入电视剧频道",
-				"total": "4336部",
-				"data": []map[string]interface{}{
-					{
-						"title": "热播",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					}, {
-						"title": "卫视同步",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					}, {
-						"title": "美剧",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					}, {
-						"title": "日韩",
-						"videos": []map[string]interface{}{
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池",
-								"thumb": "img/1.jpg",
-								"info":  "00:54",
-							},
-							{
-								"title": "赵薇自曝曾“虐”女儿小四月 把女儿推入泳池2",
-								"thumb": "img/2.jpg",
-								"info":  "00:53",
-							},
-						},
-					},
-				},
-			},
-		},
-	})
+	homeData, err := c.getHomeData()
+	if err != nil {
+		c.Logger.Printf("getHomeData error: %s", err)
+		c.Render.Error(500)
+		return
+	}
+	c.Render.HTML(200, "index", homeData.Hot)
 }
 
 func (c *Index) Best() {
-	c.Render.HTML(200, "best", nil)
+	homeData, err := c.getHomeData()
+	if err != nil {
+		c.Logger.Printf("getHomeData error: %s", err)
+		c.Render.Error(500)
+		return
+	}
+	c.Render.JSON(200, homeData.Best)
 }
 
 func (c *Index) Rank() {
-	c.Render.JSON(200, "rank")
+	homeData, err := c.getHomeData()
+	if err != nil {
+		c.Logger.Printf("getHomeData error: %s", err)
+		c.Render.Error(500)
+		return
+	}
+	c.Render.JSON(200, homeData.Rank)
 }

@@ -1,29 +1,154 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 
 	"hi.tv/1yy/libs/mivideo"
+	"hi.tv/1yy/models"
+	"hi.tv/1yy/models/enums"
 )
 
-//	"hi.tv/1yy/models"
+func GetChannelIdByCode(code, name string) (channelId int64, err error) {
+	channel, err := models.ChannelDao.GetByCode(code)
+	if err != nil {
+		if err == models.ErrNotExist {
+			channelId, err = models.ChannelDao.Insert(&models.ChannelModel{
+				Code:     code,
+				Name:     name,
+				Parent:   0,
+				IsSub:    false,
+				IsRec:    false,
+				IsFilter: false,
+				Status:   enums.StatusEnabled,
+			})
+			return
+		}
+		return
+	}
+	channelId = channel.Id
+	return
+}
+func GetGroupIdByChannelId(channelId int64, title string) (groupId int64, err error) {
+	group, err := models.RecGroupDao.GetByChannelId(channelId)
+	if err != nil {
+		if err == models.ErrNotExist {
+			groupId, err = models.RecGroupDao.Insert(&models.RecGroupModel{
+				ChannelId: channelId,
+				Title:     title,
+				Status:    enums.StatusEnabled,
+			})
+			return
+		}
+		return
+	}
+	groupId = group.Id
+	return
+}
+func SaveGroupItems(groupId int64, items []*mivideo.GroupItem) {
+	for _, item := range items {
+		item, err := models.RecGroupItemDao.GetByGroupIdAndMiURL(groupId, item.TargetURL)
+		if err != nil {
+			if err == models.ErrNotExist {
+				groupItem := &models.RecGroupItemModel{
+					GroupId:  groupId,
+					Title:    item.Title,
+					SubTitle: item.SubTitle,
+					Poster:   item.Poster,
+					Entity:   item.Entity,
+					Hint:     item.Hint,
+					MiURL:    item.TargetURL,
+				}
+				itemId, err := models.RecGroupItemDao.Insert(groupItem)
+				if err != nil {
+					log.Printf("insert rec group item error: %s\n", err)
+					continue
+				}
+				log.Printf("insert rec group item id: %d\n", itemId)
+			} else {
+				log.Printf("get rec group item error: %s\n", err)
+			}
+		} else {
+			log.Println("rec group item exist: %#v\n", item)
+		}
+	}
+}
 
+func GetGroupIdByTargetURL(channelId int64, title, targetURL string) (groupId int64, err error) {
+	group, err := models.RecGroupDao.GetByTargetURL(targetURL)
+	if err != nil {
+		if err == models.ErrNotExist {
+			groupId, err = models.RecGroupDao.Insert(&models.RecGroupModel{
+				ChannelId: channelId,
+				Title:     title,
+				Status:    enums.StatusEnabled,
+				TargetURL: targetURL,
+			})
+			return
+		}
+		return
+	}
+	groupId = group.Id
+}
+
+func SaveBest() {
+
+}
 func main() {
 	jobsConf, err := NewJobsConfig("./jobs.conf")
 	if err != nil {
 		panic(err)
 	}
-	/*
-		err = models.InitDB(jobsConf.MySQLDsn)
-		if err != nil {
-			panic(err)
-		}
-	*/
+
+	err = models.InitDB(jobsConf.MySQLDsn)
+	if err != nil {
+		panic(err)
+	}
+
 	miVideoService := mivideo.NewMiVideoService(jobsConf.MiHost, jobsConf.MiApi, jobsConf.MiKey, jobsConf.MiToken)
 	homeData, err := miVideoService.FetchHomeData()
 	if err != nil {
 		panic(err)
+	}
+
+	if homeData.Hot != nil {
+		channelId, err := GetChannelIdByCode("slide", "首页幻灯片")
+		if err != nil {
+			log.Printf("GetChannelIdByCode error: %s", err)
+		}
+		groupId, err := GetGroupIdByChannelId(channelId, "首页幻灯片")
+		if err != nil {
+			log.Printf("GetSlideGroupId error: %s", err)
+		}
+		SaveGroupItems(groupId, homeData.Hot.Slides)
+	}
+	channelId, err := GetChannelIdByCode("best", "爆点")
+	if err != nil {
+		log.Printf("GetChannelIdByCode error: %s", err)
+	}
+	for _, best := range homeData.Best {
+		item, err := models.RecGroupDao.GetByChannelId(1)
+		if err != nil {
+			if err == models.ErrNotExist {
+				item := &models.RecGroupModel{
+					ChannelId: 1,
+					Title:     best.Title,
+					SubTitle:  best.SubTitle,
+					TargetURL: best.TargetURL,
+					Status:    enums.StatusEnabled,
+					MiURL:     best.TargetURL,
+				}
+				groupId, err := models.RecGroupDao.Insert(item)
+				if err != nil {
+					log.Printf("insert rec group error: %s\n", err)
+					continue
+				}
+				log.Printf("insert rec group id: %d\n", groupId)
+				continue
+			}
+			log.Printf("get rec group by channel 1 error: %s", err)
+			return
+		}
+
 	}
 	//	log.Printf("------------ %s -------------\n-------- Slides --------\n", homeData.Hot.Title)
 	//	for _, slide := range homeData.Hot.Slides {
@@ -43,8 +168,8 @@ func main() {
 	//		}
 	//	}
 
-	jsonBytes, err := json.Marshal(homeData)
-	log.Println(string(jsonBytes))
+	//	jsonBytes, err := json.Marshal(homeData)
+	//	log.Println(string(jsonBytes))
 }
 
 /*

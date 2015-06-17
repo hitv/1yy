@@ -4,7 +4,6 @@ import (
 	"html/template"
 	"log"
 	"path"
-	"strconv"
 	"strings"
 	"time"
 
@@ -30,7 +29,7 @@ func templateFuncs(conf *AppConfig) []template.FuncMap {
 			"asset": func(filePath string) string {
 				if conf.Environment == EnvDev {
 					filePath = strings.Replace(filePath, ".min.", ".src.", 1)
-					filePath += "?_t=" + strconv.FormatInt(time.Now().Unix(), 10)
+					//filePath += "?_t=" + strconv.FormatInt(time.Now().Unix(), 10)
 				}
 				return path.Clean(path.Join(conf.AssetPrefix, filePath))
 			},

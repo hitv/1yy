@@ -37,6 +37,10 @@ type AppConfig struct {
 	SessionName         string
 	SessionKeyPairs     []byte
 	Logger              *log.Logger
+	MiHost              string
+	MiApi               string
+	MiKey               string
+	MiToken             string
 	RenderOpt           render.Options
 }
 
@@ -98,6 +102,26 @@ func NewAppConfig(confPath string) (appConf *AppConfig, err error) {
 		assetPath = ""
 	}
 
+	miHost, err := conf.String("mi", "host")
+	if err != nil {
+		return
+	}
+
+	miApi, err := conf.String("mi", "api")
+	if err != nil {
+		return
+	}
+
+	miKey, err := conf.String("mi", "key")
+	if err != nil {
+		return
+	}
+
+	miToken, err := conf.String("mi", "token")
+	if err != nil {
+		return
+	}
+
 	assetPrefix, err := conf.String("path", "asset_prefix")
 	if err != nil {
 		assetPrefix = "/"
@@ -121,6 +145,10 @@ func NewAppConfig(confPath string) (appConf *AppConfig, err error) {
 		SessionName:         sessionName,
 		SessionKeyPairs:     []byte(sessionKeyPairs),
 		Logger:              log.New(os.Stdout, "", log.LstdFlags),
+		MiHost:              miHost,
+		MiApi:               miApi,
+		MiKey:               miKey,
+		MiToken:             miToken,
 		RenderOpt: render.Options{
 			Layout:       "layout",
 			CompressHTML: compressHTML,

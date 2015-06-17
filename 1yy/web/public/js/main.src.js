@@ -93,30 +93,49 @@
 (function() {
   var Slider;
   Slider = function(opt) {
-    var autoPlayInterval, current, hm, itemNum, itemWidth, items, moveX, offsetX, points, setPointActive, setTimer, setTransformX, showNext, showPrev, showSlider, that, timer, touchEnd, touchMove, touchStart, touchX, transformDuration, wrapper;
+    var autoPlayInterval, current, hm, init, itemNum, items, moveX, offsetX, points, pointsWrapper, resize, setPointActive, setTimer, setTransformX, showNext, showPrev, showSlider, sliderWidth, that, timer, touchEnd, touchMove, touchStart, touchX, transformDuration, wrapper;
     that = this;
+    touchX = 0;
+    moveX = 0;
+    offsetX = 0;
+    itemNum = 0;
+    sliderWidth = 0;
+    current = 0;
+    points = [];
+    timer = false;
     hm = that.html();
     hm = hm.replace(/\n|\r/g, '');
     hm = hm.replace(/>\s*</g, '><');
     hm = hm.replace(/\s*</g, '<');
     that.html(hm);
     opt = opt || {};
-    opt.autoPlay = typeof opt.autoPlay !== 'undefined' ? opt.autoPlay : true;
-    wrapper = that.find(opt.wrapSelector || '.wrap');
-    items = wrapper.find(opt.itemSelector || '.item');
-    points = that.find(opt.pointsSelector || '.points>span');
-    itemWidth = that.width();
-    itemNum = items.length;
-    timer = 0;
-    items.width(itemWidth);
-    touchX = 0;
-    moveX = 0;
-    offsetX = 0;
-    current = 0;
     transformDuration = opt.transformDuration || 500;
     autoPlayInterval = opt.autoPlayInterval || 3000;
+    opt.autoPlay = typeof opt.autoPlay !== 'undefined' ? opt.autoPlay : true;
+    wrapper = that.find(opt.wrapper || '.wrap');
+    items = wrapper.find(opt.itemSelector || '.item');
+    pointsWrapper = that.find(opt.pointsWrapper || '.points');
+    resize = function() {
+      sliderWidth = that.width();
+      items.width(sliderWidth);
+      showSlider(current);
+    };
+    init = function() {
+      items.each(function() {
+        pointsWrapper.append('<span></span>');
+      });
+      itemNum = items.length;
+      points = pointsWrapper.find('span');
+      that.on('touchstart', touchStart);
+      that.on('touchmove', touchMove);
+      that.on('touchend', touchEnd);
+      if (opt.autoPlay) {
+        setTimer();
+      }
+      resize();
+    };
     setTimer = function() {
-      return timer = setInterval(showNext, autoPlayInterval);
+      timer = setInterval(showNext, autoPlayInterval);
     };
     setTransformX = function(pixel, duration) {
       wrapper.css({
@@ -125,10 +144,8 @@
       });
     };
     setPointActive = function(i) {
-      var point;
       points.removeClass('active');
-      point = $(points.get(current));
-      point.addClass('active');
+      $(points.get(current)).addClass('active');
     };
     showSlider = function(i) {
       if (i < 0) {
@@ -137,7 +154,7 @@
         i = 0;
       }
       current = i % itemNum;
-      offsetX = -itemWidth * current;
+      offsetX = -sliderWidth * current;
       setTransformX(offsetX, transformDuration);
       setPointActive(current);
       that.trigger('show', current);
@@ -157,7 +174,9 @@
       } else {
         touchX = e.pageX;
       }
-      clearInterval(timer);
+      if (timer !== false) {
+        clearInterval(timer);
+      }
     };
     touchMove = function(e) {
       if (typeof e.touches !== 'undefined') {
@@ -186,25 +205,22 @@
         setTimer();
       }
     };
-    that.on('touchstart', touchStart);
-    that.on('touchmove', touchMove);
-    that.on('touchend', touchEnd);
-    showSlider(0);
-    if (opt.autoPlay) {
-      setTimer();
-    }
+    init();
     $.extend(that, {
       prev: showPrev,
       next: showNext,
       show: showSlider,
       pause: function() {
         opt.autoPlay = false;
-        return clearInterval(timer);
+        if (timer !== false) {
+          clearInterval(timer);
+        }
       },
       play: function() {
         opt.autoPlay = true;
-        return setTimer();
-      }
+        setTimer();
+      },
+      resize: resize
     });
     return that;
   };
