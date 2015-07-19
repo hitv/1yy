@@ -2,68 +2,76 @@ package main
 
 import (
 	"log"
+	"os"
 	"strings"
 	"time"
 )
 
-var accounts = [][]string{
-	{"864093321394329", "15843983987", "123.com.."},
-	{"864093029225386", "13943969701", "123.com.."},
+type Account struct {
+	Imei string
+	Username string
+	Password string
+}
+func getAdverts(silverAdvert *SilverAdvert, categaryIds []int) (adverts []Advert, err error) {
+	for id := 1; id < 16; id++ {
+		time.Sleep(time.Second * 5)
+		tmpAdverts, err := silverAdvert.PullCategoryAds(id)
+		if err != nil {
+			log.Printf("category id: %d, error: %s\n", id, err)
+			continue
+		}
+		log.Printf("category id: %d, num: %d", id, len(tmpAdverts))
+		adverts = append(adverts, tmpAdverts...)
+	}
+	return
 }
 
-func earn(account []string) {
-	silverAdvert := NewSilverAdvert("http://service.inkey.com", account[0], account[1], account[2])
+func earn(account *Account) {
+	silverAdvert := NewSilverAdvert("http://service.inkey.com", account.Imei, account.Username, account.Password)
 	err := silverAdvert.Login()
 	if err != nil {
-		log.Printf("%s登录失败\n", account[1])
+		log.Printf("%s login error:%s\n", account.Username, err)
 		return
 	}
+	time.Sleep(time.Second * 5)
 
-	//	adverts, err := silverAdvert.IndexAdverts()
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	/*for id := 32952; id < 53215; id++ {
-		go func(id int) {
-			earn, err := silverAdvert.GeneratedIntegral(id)
-			if err != nil {
-				log.Printf("广告(%d)赚钱出错：%s\n", id, err)
-				return
-			}
-			log.Printf("广告(%d)赚钱：%d\n", id, earn)
-		}(id)
+	categaryIds := []int{3, 8}
+	adverts, err := getAdverts(silverAdvert, categaryIds)
+	if err!= nil {
+		log.Printf("%s getAdverts error:%s\n", account.Username, err)
+		return
 	}
-	<-time.After(time.Minute * 10)
-	return*/
-	for n := 0; n < 4; n++ {
-		for id := 1; id < 16; id++ {
-			log.Printf("开始拉取分类%d广告\n", id)
-			adverts, err := silverAdvert.PullCategoryAds(id)
-			if err != nil {
-				panic(err)
-			}
-			log.Printf("完成拉取分类%d广告，%d条\n", id, len(adverts))
-
-			for _, advert := range adverts {
-				if !advert.IsPublicServiceAdvert {
-					earn, err := silverAdvert.GeneratedIntegral(advert.Id)
-					if err != nil {
-						if strings.Contains(err.Error(), "捡满了") {
-							return
-						}
-						log.Printf("广告(%d)赚钱出错：%s\n", advert.Id, err)
+	excludesAdverts := make(map[int]bool)
+	for n := 0; n < 30; n++ {
+		for _, advert := range adverts {
+			if _, ok := excludesAdverts[advert.Id]; !ok && !advert.IsPublicServiceAdvert {
+				time.Sleep(time.Second * 5)
+				earn, err := silverAdvert.GeneratedIntegral(advert.Id)
+				if err != nil {
+					if strings.Contains(err.Error(), "捡满了") {
+						return
+					}
+					if strings.Contains(err.Error(), "最大播放数") {
+						excludesAdverts[advert.Id] = true
 						continue
 					}
-					log.Printf("广告(%d)赚钱：%d\n", advert.Id, earn)
+
+					log.Printf("ad(%d) error: %s\n", advert.Id, err)
+					continue
 				}
-				time.Sleep(time.Second * 5)
+				log.Printf("ad(%d) earn: %d\n", advert.Id, earn)
 			}
 		}
+		time.Sleep(time.Second * 5)
+
 	}
 }
 
 func main() {
-	for _, account := range accounts {
-		earn(account)
+	if len(os.Args) < 4 {
+		log.Printf("Usage: %s imei username password\n", os.Args[0])
+		return
 	}
+	account := &Account{os.Args[1], os.Args[2], os.Args[3]}
+	earn(account)
 }
